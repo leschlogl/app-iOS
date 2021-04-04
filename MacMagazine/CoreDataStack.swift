@@ -37,6 +37,11 @@ class CoreDataStack {
         description?.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
         description?.setOption(true as NSNumber, forKey: "NSPersistentStoreRemoteChangeNotificationOptionKey")
 
+        container.viewContext.automaticallyMergesChangesFromParent = true
+
+        // To prevent duplicates, ignore any object that came later
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy //NSRollbackMergePolicy
+
         container.loadPersistentStores { _, error in
 			guard let error = error as NSError? else {
 				return
@@ -44,8 +49,6 @@ class CoreDataStack {
 			fatalError("Unresolved error: \(error), \(error.userInfo)")
 		}
 
-		// To prevent duplicates, ignore any object that came later
-		container.viewContext.mergePolicy = NSRollbackMergePolicy
 		return container
 	}()
 
