@@ -279,7 +279,7 @@
 		685E4305252227420028FAA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsHeaderCell.xib; sourceTree = "<group>"; };
 		685E4309252227D80028FAA0 /* SettingsHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderCell.swift; sourceTree = "<group>"; };
 		6897160425F21F120030A16C /* Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriptions.swift; sourceTree = "<group>"; };
-		68A2867A2619D7D60048FE77 /* MacMagazineRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacMagazineRelease.entitlements; sourceTree = "<group>"; };
+		68A2867A2619D7D60048FE77 /* MacMagazine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacMagazine.entitlements; sourceTree = "<group>"; };
 		68A2867E2619D7DE0048FE77 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		68B969A22530DBA20035B641 /* DisqusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisqusViewController.swift; sourceTree = "<group>"; };
 		68B969A62530E35F0035B641 /* macmagazine 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "macmagazine 9.xcdatamodel"; sourceTree = "<group>"; };
@@ -339,7 +339,6 @@
 		9B9C7F99226BF835000534CA /* MacMagazineNotificationServiceExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MacMagazineNotificationServiceExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		9B9C7F9B226BF836000534CA /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		9B9C7F9D226BF836000534CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9B9C7FAC226BFD0F000534CA /* MacMagazine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacMagazine.entitlements; sourceTree = "<group>"; };
 		9B9C7FAD226BFEEC000534CA /* MacMagazineNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacMagazineNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
 		9B9C7FB0226CA192000534CA /* PushNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		9BA9393D2260DDB8004005AA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
@@ -571,7 +570,7 @@
 				9BD4E971225CFDEC00683B88 /* icons */,
 				9BCAD6881F47A08100B54526 /* Info.plist */,
 				9BCAD6851F47A08100B54526 /* LaunchScreen.storyboard */,
-				9B9C7FAC226BFD0F000534CA /* MacMagazine.entitlements */,
+				68A2867A2619D7D60048FE77 /* MacMagazine.entitlements */,
 				9BCAD6801F47A08100B54526 /* Main.storyboard */,
 				9B8A5D7B247099B700C601E0 /* sound.wav */,
 				68EF534E2527103000FCBD3C /* Splash.storyboard */,
@@ -696,7 +695,6 @@
 		9BCAD6791F47A08100B54526 /* MacMagazine */ = {
 			isa = PBXGroup;
 			children = (
-				68A2867A2619D7D60048FE77 /* MacMagazineRelease.entitlements */,
 				9B578C2E1F47A2A40086C6A7 /* Resources */,
 				9BE697DA1F487DAB0048D68D /* Comum */,
 				9BE697D71F487D5A0048D68D /* Posts */,
@@ -1932,7 +1930,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MacMagazine/MacMagazineRelease.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MacMagazine/MacMagazine.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 4.4.2.0;
