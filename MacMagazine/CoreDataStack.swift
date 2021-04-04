@@ -30,14 +30,20 @@ class CoreDataStack {
 	let postEntityName = "Post"
 	let videoEntityName = "Video"
 
-	lazy var persistentContainer: NSPersistentContainer = {
-		let container = NSPersistentContainer(name: "macmagazine")
-		container.loadPersistentStores { _, error in
+	lazy var persistentContainer: NSPersistentCloudKitContainer = {
+		let container = NSPersistentCloudKitContainer(name: "macmagazine")
+
+        let description = container.persistentStoreDescriptions.first
+        description?.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        description?.setOption(true as NSNumber, forKey: "NSPersistentStoreRemoteChangeNotificationOptionKey")
+
+        container.loadPersistentStores { _, error in
 			guard let error = error as NSError? else {
 				return
 			}
 			fatalError("Unresolved error: \(error), \(error.userInfo)")
 		}
+
 		// To prevent duplicates, ignore any object that came later
 		container.viewContext.mergePolicy = NSRollbackMergePolicy
 		return container
