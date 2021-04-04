@@ -16,11 +16,6 @@
         <attribute name="read" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="shortURL" optional="YES" attributeType="String"/>
         <attribute name="title" optional="YES" attributeType="String"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="postId"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <entity name="Video" representedClassName="Video" syncable="YES" codeGenerationType="class">
         <attribute name="artworkURL" optional="YES" attributeType="String"/>
