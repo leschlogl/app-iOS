@@ -391,8 +391,8 @@ extension SettingsTableViewController {
     fileprivate func setIntensity(_ intensity: Float) {
         readTransparencyValue.text = "\(String(describing: Int(intensity)))%"
 
-        UserDefaults.standard.set(intensity / 100.0, forKey: Definitions.transparency)
-        UserDefaults.standard.synchronize()
+        var settings = Settings()
+        settings.transparency = CGFloat(intensity / 100.0)
 
         NotificationCenter.default.post(name: .reloadData, object: nil)
     }

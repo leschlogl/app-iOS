@@ -280,6 +280,7 @@
 		685E4305252227420028FAA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SettingsHeaderCell.xib; sourceTree = "<group>"; };
 		685E4309252227D80028FAA0 /* SettingsHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeaderCell.swift; sourceTree = "<group>"; };
 		6897160425F21F120030A16C /* Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriptions.swift; sourceTree = "<group>"; };
+		6899E4DC261A67B90011E010 /* macmagazine 11.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "macmagazine 11.xcdatamodel"; sourceTree = "<group>"; };
 		68A2867A2619D7D60048FE77 /* MacMagazine.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MacMagazine.entitlements; sourceTree = "<group>"; };
 		68A2867E2619D7DE0048FE77 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		68B969A22530DBA20035B641 /* DisqusViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisqusViewController.swift; sourceTree = "<group>"; };
@@ -2126,6 +2127,7 @@
 		9B6D0B822229B72100E2C044 /* macmagazine.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6899E4DC261A67B90011E010 /* macmagazine 11.xcdatamodel */,
 				680386382619E3D200457BF0 /* macmagazine 10.xcdatamodel */,
 				68B969A62530E35F0035B641 /* macmagazine 9.xcdatamodel */,
 				6854805024D5E6BF008FAAC6 /* macmagazine 8.xcdatamodel */,
@@ -2137,7 +2139,7 @@
 				9B872AEE2254C9E600A3C1C3 /* macmagazine 2.xcdatamodel */,
 				9B6D0B832229B72100E2C044 /* macmagazine.xcdatamodel */,
 			);
-			currentVersion = 680386382619E3D200457BF0 /* macmagazine 10.xcdatamodel */;
+			currentVersion = 6899E4DC261A67B90011E010 /* macmagazine 11.xcdatamodel */;
 			path = macmagazine.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

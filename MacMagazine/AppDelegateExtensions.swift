@@ -62,6 +62,8 @@ extension AppDelegate {
 
 extension AppDelegate {
 	func setup(_ launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        Settings().migrate()
+
         // Apply custom thmee (Dark/Light)
 		Settings().applyTheme()
 

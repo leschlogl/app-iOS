@@ -29,13 +29,10 @@ class CoreDataStack {
 
 	let postEntityName = "Post"
 	let videoEntityName = "Video"
+    let settingsEntityName = "Configuration"
 
 	lazy var persistentContainer: NSPersistentCloudKitContainer = {
 		let container = NSPersistentCloudKitContainer(name: "macmagazine")
-
-        let description = container.persistentStoreDescriptions.first
-        description?.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-        description?.setOption(true as NSNumber, forKey: "NSPersistentStoreRemoteChangeNotificationOptionKey")
 
         container.viewContext.automaticallyMergesChangesFromParent = true
 
@@ -129,7 +126,7 @@ class CoreDataStack {
 		}
 	}
 
-	// MARK: - Post Video -
+	// MARK: - Entity Post -
 
 	func getPostsForWatch(completion: @escaping ([PostData]) -> Void) {
 		let request = NSFetchRequest<NSFetchRequestResult>(entityName: postEntityName)
@@ -351,4 +348,98 @@ class CoreDataStack {
 		video.duration = item.duration
 	}
 
+    // MARK: - Entity settings -
+
+    fileprivate func fetch() -> Configuration? {
+        var settings: [Configuration]?
+
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: settingsEntityName)
+        do {
+            settings = try viewContext.fetch(request) as? [Configuration]
+        } catch let error {
+            logE(error.localizedDescription)
+        }
+
+        return settings?.first
+    }
+
+    var migrated: Bool {
+        get {
+            return fetch()?.migrated ?? false
+        }
+        set(value) {
+            guard let settings = fetch() else {
+                let settings = Configuration(context: viewContext)
+                settings.migrated = value
+                save()
+                return
+            }
+            settings.migrated = value
+            save()
+        }
+    }
+
+    var allPushes: Bool {
+        get {
+            return fetch()?.allPushes ?? false
+        }
+        set(value) {
+            guard let settings = fetch() else {
+                let settings = Configuration(context: viewContext)
+                settings.allPushes = value
+                save()
+                return
+            }
+            settings.allPushes = value
+            save()
+        }
+    }
+
+    var purchased: Bool {
+        get {
+            return fetch()?.purchased ?? false
+        }
+        set(value) {
+            guard let settings = fetch() else {
+                let settings = Configuration(context: viewContext)
+                settings.purchased = value
+                save()
+                return
+            }
+            settings.purchased = value
+            save()
+        }
+    }
+
+    var patrao: Bool {
+        get {
+            return fetch()?.patrao ?? false
+        }
+        set(value) {
+            guard let settings = fetch() else {
+                let settings = Configuration(context: viewContext)
+                settings.patrao = value
+                save()
+                return
+            }
+            settings.patrao = value
+            save()
+        }
+    }
+
+    var transparency: Float {
+        get {
+            return fetch()?.transparency ?? 0.5
+        }
+        set(value) {
+            guard let settings = fetch() else {
+                let settings = Configuration(context: viewContext)
+                settings.transparency = value
+                save()
+                return
+            }
+            settings.transparency = value
+            save()
+        }
+    }
 }

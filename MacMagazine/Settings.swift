@@ -12,19 +12,18 @@ import UIKit
 // MARK: -
 
 enum Definitions {
-	static let darkMode = "darkMode"
-	static let fontSize = "font-size-settings"
-	static let icon = "icon"
-	static let watch = "watch"
-	static let askForReview = "askForReview"
-	static let all_posts_pushes = "all_posts_pushes"
+    static let icon = "icon"
+    static let askForReview = "askForReview"
+    static let whatsnew = "whatsnew"
+    static let deleteAllCookies = "deleteAllCookies"
+    static let mmLive = "mmLive"
+    static let fontSize = "font-size-settings"
+    static let darkMode = "darkMode"
+
 	static let pushPreferences = "pushPreferences"
     static let transparency = "transparency"
     static let mm_patrao = "mm_patrao"
     static let purchased = "purchased"
-    static let whatsnew = "whatsnew"
-    static let deleteAllCookies = "deleteAllCookies"
-    static let mmLive = "mmLive"
 }
 
 // MARK: -
@@ -126,21 +125,22 @@ struct Settings {
     // MARK: - Read Intensity -
 
     var transparency: CGFloat {
-        guard let transparency = UserDefaults.standard.object(forKey: Definitions.transparency) as? CGFloat else {
-            return 0.4
+        get {
+            return CGFloat(CoreDataStack.shared.transparency)
         }
-        return transparency
+        set(value) {
+            CoreDataStack.shared.transparency = Float(value)
+        }
     }
 
     // MARK: - Patrão -
 
     var isPatrao: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: Definitions.mm_patrao)
+            return CoreDataStack.shared.patrao
         }
         set(value) {
-            UserDefaults.standard.set(value, forKey: Definitions.mm_patrao)
-            UserDefaults.standard.synchronize()
+            CoreDataStack.shared.patrao = value
         }
     }
 
@@ -152,11 +152,10 @@ struct Settings {
 
     var purchased: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: Definitions.purchased)
+            return CoreDataStack.shared.purchased
         }
         set(value) {
-            UserDefaults.standard.set(value, forKey: Definitions.purchased)
-            UserDefaults.standard.synchronize()
+            CoreDataStack.shared.purchased = value
         }
     }
 
@@ -256,25 +255,11 @@ extension Settings {
 	// 0 -> All posts
 	// 1 -> Featured only
 	var pushPreference: Int {
-		guard let pushPreferences = UserDefaults.standard.object(forKey: Definitions.pushPreferences) as? Int else {
-			// There is no Push Notification Preference or is old style
-			guard let pushPreferences = UserDefaults.standard.object(forKey: Definitions.all_posts_pushes) as? Bool else {
-				// There is no Push Notification Preference
-				return 0
-			}
-			// Remove old preference
-			UserDefaults.standard.removeObject(forKey: Definitions.all_posts_pushes)
-			UserDefaults.standard.synchronize()
-
-			return pushPreferences ? 0 : 1
-		}
-		return pushPreferences
+        return CoreDataStack.shared.allPushes ? 1 : 0
 	}
 
 	func updatePushPreference(_ segment: Int) {
-		UserDefaults.standard.set(segment, forKey: Definitions.pushPreferences)
-		UserDefaults.standard.synchronize()
-
+        CoreDataStack.shared.allPushes = segment == 1
 		OneSignal.sendTag("notification_preferences", value: segment == 0 ? PushPreferences.all : PushPreferences.featured)
 	}
 }
@@ -311,5 +296,25 @@ extension Settings {
         label.text = message
 
         return label
+    }
+}
+
+extension Settings {
+    func migrate() {
+        if !CoreDataStack.shared.migrated {
+            let transparency = UserDefaults.standard.float(forKey: Definitions.transparency)
+            CoreDataStack.shared.transparency = transparency
+
+            let patrao = UserDefaults.standard.bool(forKey: Definitions.mm_patrao)
+            CoreDataStack.shared.patrao = patrao
+
+            let purchased = UserDefaults.standard.bool(forKey: Definitions.purchased)
+            CoreDataStack.shared.purchased = purchased
+
+            let pushPreferences = UserDefaults.standard.integer(forKey: Definitions.pushPreferences)
+            CoreDataStack.shared.allPushes = pushPreferences == 1
+
+            CoreDataStack.shared.migrated = true
+        }
     }
 }
