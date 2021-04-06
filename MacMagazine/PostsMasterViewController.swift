@@ -317,6 +317,7 @@ class PostsMasterViewController: UITableViewController, FetchedResultsController
                             (UIApplication.shared.delegate as? AppDelegate)?.shortcutAction = nil
                         }
                     }
+
                     return
                 }
                 images.append(post.artworkURL)

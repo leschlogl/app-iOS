@@ -17,6 +17,8 @@ enum FlushType {
     case imagesOnly
 }
 
+let appTransactionAuthorName = "MacMagazineApp"
+
 class CoreDataStack {
 
 	// MARK: - Singleton -
@@ -31,29 +33,78 @@ class CoreDataStack {
 	let videoEntityName = "Video"
     let settingsEntityName = "Configuration"
 
-	lazy var persistentContainer: NSPersistentCloudKitContainer = {
+    lazy var persistentContainer: NSPersistentCloudKitContainer = {
 		let container = NSPersistentCloudKitContainer(name: "macmagazine")
 
-        container.viewContext.automaticallyMergesChangesFromParent = true
-
-        // To prevent duplicates, ignore any object that came later
-        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy //NSRollbackMergePolicy
+        // Enable history tracking and remote notifications
+        guard let description = container.persistentStoreDescriptions.first else {
+            fatalError("###\(#function): Failed to retrieve a persistent store description.")
+        }
+        description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+        description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
 
         container.loadPersistentStores { _, error in
-			guard let error = error as NSError? else {
-				return
-			}
-			fatalError("Unresolved error: \(error), \(error.userInfo)")
-		}
+            guard let error = error as NSError? else {
+                return
+            }
+            fatalError("Unresolved error: \(error), \(error.userInfo)")
+        }
 
-		return container
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        container.viewContext.transactionAuthor = appTransactionAuthorName
+
+        // Pin the viewContext to the current generation token and set it to keep itself up to date with local changes.
+        container.viewContext.automaticallyMergesChangesFromParent = true
+
+        // Observe Core Data remote change notifications.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(type(of: self).storeRemoteChange(_:)),
+                                               name: .NSPersistentStoreRemoteChange,
+                                               object: container.persistentStoreCoordinator)
+
+        return container
 	}()
+
+    // An operation queue for handling history processing tasks: watching changes, deduplicating, and triggering UI updates if needed.
+    private lazy var historyQueue: OperationQueue = {
+        let queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 1
+        return queue
+    }()
 
 	var viewContext: NSManagedObjectContext {
 		return persistentContainer.viewContext
 	}
 
-	// MARK: - Context Methods -
+    // Track the last history token processed for a store, and write its value to file.
+    // The historyQueue reads the token when executing operations, and updates it after processing is complete.
+    private var lastHistoryToken: NSPersistentHistoryToken? = nil {
+        didSet {
+            guard let token = lastHistoryToken,
+                  let data = try? NSKeyedArchiver.archivedData( withRootObject: token, requiringSecureCoding: true) else { return }
+
+            do {
+                try data.write(to: tokenFile)
+            } catch {
+                logE(error.localizedDescription)
+            }
+        }
+    }
+
+    // The file URL for persisting the persistent history token.
+    private lazy var tokenFile: URL = {
+        let url = NSPersistentContainer.defaultDirectoryURL().appendingPathComponent(appTransactionAuthorName, isDirectory: true)
+        if !FileManager.default.fileExists(atPath: url.path) {
+            do {
+                try FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                logE(error.localizedDescription)
+            }
+        }
+        return url.appendingPathComponent("token.data", isDirectory: false)
+    }()
+
+    // MARK: - Context Methods -
 
 	func save() {
 		save(nil)
@@ -354,6 +405,7 @@ class CoreDataStack {
         var settings: [Configuration]?
 
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: settingsEntityName)
+
         do {
             settings = try viewContext.fetch(request) as? [Configuration]
         } catch let error {
@@ -441,5 +493,167 @@ class CoreDataStack {
             settings.transparency = value
             save()
         }
+    }
+}
+
+// MARK: - Notifications -
+
+extension CoreDataStack {
+    /**
+     Handle remote store change notifications (.NSPersistentStoreRemoteChange).
+     */
+    @objc
+    fileprivate func storeRemoteChange(_ notification: Notification) {
+        // Process persistent history to merge changes from other coordinators.
+        historyQueue.addOperation {
+            self.processPersistentHistory()
+        }
+    }
+}
+
+// MARK: - Persistent history processing -
+
+extension CoreDataStack {
+
+    fileprivate struct DeDuplicate {
+        var name: String
+        var objectId: NSManagedObjectID
+    }
+
+    // Process persistent history, posting any relevant transactions to the current view.
+    fileprivate func processPersistentHistory() {
+        let taskContext = persistentContainer.newBackgroundContext()
+        taskContext.performAndWait {
+
+            // Fetch history received from outside the app since the last token
+            guard let historyFetchRequest = NSPersistentHistoryTransaction.fetchRequest else { return }
+            historyFetchRequest.predicate = NSPredicate(format: "author != %@", appTransactionAuthorName)
+            let request = NSPersistentHistoryChangeRequest.fetchHistory(after: lastHistoryToken)
+            request.fetchRequest = historyFetchRequest
+
+            let result = (try? taskContext.execute(request)) as? NSPersistentHistoryResult
+            guard let transactions = result?.result as? [NSPersistentHistoryTransaction],
+                  !transactions.isEmpty else { return }
+
+            // Deduplicate objects.
+            var newObjectIDs = [DeDuplicate]()
+
+            for transaction in transactions where transaction.changes != nil {
+                transaction.changes?.forEach { change in
+                    if change.changeType == .insert,
+                       let name = change.changedObjectID.entity.name {
+                        newObjectIDs.append(DeDuplicate(name: name, objectId: change.changedObjectID))
+                    }
+                }
+            }
+
+            if !newObjectIDs.isEmpty {
+                deduplicateAndWait(objects: newObjectIDs)
+            }
+
+            // Update the history token using the last transaction.
+            lastHistoryToken = transactions.last?.token
+        }
+    }
+}
+
+// MARK: - Deduplicate -
+
+extension CoreDataStack {
+    // Deduplicate tags with the same name by processing the persistent history, one object at a time, on the historyQueue.
+    // All peers should eventually reach the same result with no coordination or communication.
+    fileprivate func deduplicateAndWait(objects: [DeDuplicate]) {
+        // Make any store changes on a background context
+        let taskContext = persistentContainer.backgroundContext()
+
+        // Use performAndWait because each step relies on the sequence. Since historyQueue runs in the background, waiting won’t block the main queue.
+        taskContext.performAndWait {
+            objects.forEach { object in
+                self.deduplicate(object: object, performingContext: taskContext)
+            }
+            // Save the background context to trigger a notification and merge the result into the viewContext.
+            save(taskContext)
+        }
+    }
+
+    // Deduplicate a single object.
+    fileprivate func deduplicate(object: DeDuplicate, performingContext: NSManagedObjectContext) {
+        switch object.name {
+            case Post.entity().name:
+                deduplicatePost(object: object, performingContext: performingContext)
+
+            case Video.entity().name:
+                deduplicateVideo(object: object, performingContext: performingContext)
+
+            case Configuration.entity().name:
+                deduplicateConfiguration(object: object, performingContext: performingContext)
+
+            default:
+                break
+        }
+    }
+
+    fileprivate func deduplicatePost(object: DeDuplicate, performingContext: NSManagedObjectContext) {
+        guard let post = performingContext.object(with: object.objectId) as? Post,
+              let postId = post.postId else { return }
+
+        // Fetch all objects with the same postId
+        let fetchRequest: NSFetchRequest<Post> = Post.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "pubDate", ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "postId == %@", postId)
+
+        // Return if there are no duplicates.
+        guard var duplicated = try? performingContext.fetch(fetchRequest),
+              duplicated.count > 1 else { return }
+
+        // Pick the first object as the winner.
+        duplicated.removeFirst()
+        duplicated.forEach { object in
+            do { performingContext.delete(object) }
+        }
+    }
+
+    fileprivate func deduplicateVideo(object: DeDuplicate, performingContext: NSManagedObjectContext) {
+        guard let video = performingContext.object(with: object.objectId) as? Video,
+              let videoId = video.videoId else { return }
+
+        // Fetch all objects with the same videoId
+        let fetchRequest: NSFetchRequest<Video> = Video.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "pubDate", ascending: false)]
+        fetchRequest.predicate = NSPredicate(format: "videoId == %@", videoId)
+
+        // Return if there are no duplicates.
+        guard var duplicated = try? performingContext.fetch(fetchRequest),
+              duplicated.count > 1 else { return }
+
+        // Pick the first object as the winner.
+        duplicated.removeFirst()
+        duplicated.forEach { object in
+            do { performingContext.delete(object) }
+        }
+    }
+
+    fileprivate func deduplicateConfiguration(object: DeDuplicate, performingContext: NSManagedObjectContext) {
+        // Fetch all objects with the same key
+        let fetchRequest: NSFetchRequest<Configuration> = Configuration.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "key == %@", appTransactionAuthorName)
+
+        // Return if there are no duplicates.
+        guard var duplicated = try? performingContext.fetch(fetchRequest),
+              duplicated.count > 1 else { return }
+
+        // Pick the first object as the winner.
+        duplicated.removeFirst()
+        duplicated.forEach { object in
+            do { performingContext.delete(object) }
+        }
+    }
+}
+
+extension NSPersistentContainer {
+    func backgroundContext() -> NSManagedObjectContext {
+        let context = newBackgroundContext()
+        context.transactionAuthor = appTransactionAuthorName
+        return context
     }
 }

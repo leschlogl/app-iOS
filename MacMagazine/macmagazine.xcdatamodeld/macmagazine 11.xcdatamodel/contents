@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H524" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="YES" userDefinedModelVersionIdentifier="">
     <entity name="Configuration" representedClassName="Configuration" syncable="YES" codeGenerationType="class">
-        <attribute name="allPushes" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="migrated" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="patrao" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="purchased" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="transparency" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="allPushes" optional="YES" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" defaultValueString="MacMagazineApp"/>
+        <attribute name="migrated" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="patrao" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="purchased" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="transparency" optional="YES" attributeType="Float" defaultValueString="50" usesScalarValueType="YES"/>
     </entity>
     <entity name="Post" representedClassName="Post" syncable="YES" codeGenerationType="class">
         <attribute name="artworkURL" optional="YES" attributeType="String"/>
@@ -35,7 +36,7 @@
         <attribute name="views" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Configuration" positionX="-54" positionY="108" width="128" height="118"/>
+        <element name="Configuration" positionX="-54" positionY="108" width="128" height="133"/>
         <element name="Post" positionX="-63" positionY="-18" width="128" height="268"/>
         <element name="Video" positionX="-63" positionY="72" width="128" height="163"/>
     </elements>

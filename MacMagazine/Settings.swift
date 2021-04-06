@@ -302,8 +302,8 @@ extension Settings {
 extension Settings {
     func migrate() {
         if !CoreDataStack.shared.migrated {
-            let transparency = UserDefaults.standard.float(forKey: Definitions.transparency)
-            CoreDataStack.shared.transparency = transparency
+            let transparency = UserDefaults.standard.object(forKey: Definitions.transparency) as? CGFloat
+            CoreDataStack.shared.transparency = Float(transparency ?? 0.5)
 
             let patrao = UserDefaults.standard.bool(forKey: Definitions.mm_patrao)
             CoreDataStack.shared.patrao = patrao
