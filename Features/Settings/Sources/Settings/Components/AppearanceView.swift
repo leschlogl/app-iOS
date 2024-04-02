@@ -16,21 +16,21 @@ public struct AppearanceView: View {
 	public var body: some View {
 		Section(header: Text("Aparência")
 			.font(.headline)
-			.foregroundColor(theme.text.terciary.color)) {
-				SettingsTips.appearance.tipView(with: theme)
-					.listRowBackground(Color.clear)
+            .foregroundColor(theme.text.terciary.color)
+            .padding(.vertical)) {
+                Group {
+                    SettingsTips.appearance.tipView(with: theme)
+                    
+                    appearanceView
+                        .padding(.bottom)
 
-				appearanceView
-					.padding(.vertical, 4)
-					.listRowBackground(Color.clear)
-
-				iconsView
-					.padding(.vertical, 4)
-					.listRowBackground(Color.clear)
+                    iconsView
+                        .padding(.bottom, 10)
+                }
+                .padding(.leading)
+                .padding(.trailing, 10)
 			}
-			.listRowSeparator(.hidden)
-			.buttonStyle(PlainButtonStyle())
-}
+    }
 }
 
 extension AppearanceView {

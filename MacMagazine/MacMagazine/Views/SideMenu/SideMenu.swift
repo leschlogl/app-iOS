@@ -17,7 +17,8 @@ struct MenuView<Content: View>: View {
 					} label: {
 						Image("menu")
 							.resizable()
-							.frame(width: 58, height: 44)
+                            .aspectRatio(contentMode: .fit)
+							.frame(width: 40)
 					}
 				}
 				menu

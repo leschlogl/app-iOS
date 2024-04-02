@@ -21,7 +21,7 @@ public protocol TipType: CaseIterable, Equatable {
 extension TipType {
 	public func add(next: ((any TipType) -> Void)?) -> [Tip.Action] {
 		if self.isLast { [] } else {
-			[Tip.Action(id: "1", perform: { next?(self.next) }, {
+            [Tip.Action(id: UUID().uuidString, perform: { next?(self.next) }, {
 				Text("Próxima dica")
 			})]
 		}

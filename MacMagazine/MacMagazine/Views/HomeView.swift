@@ -44,6 +44,9 @@ struct HomeView: View {
 						.padding(.bottom)
 						.id(MainViewModel.Page.rumors)
 				}
+                .onAppear {
+                    availableWidth = geo.size.width
+                }
 				.onChange(of: geo.size.width) { value in
 					availableWidth = value
 				}

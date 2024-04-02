@@ -12,9 +12,13 @@ public struct CategoriesView: View {
 		ForEach(NewsViewModel.Category.allCases, id: \.self) { category in
 			Button(action: {},
 				   label: {
-				Text(category.title)
+                HStack {
+                    Text(category.title)
+                    Spacer()
+                }
 			})
 		}
+        .padding([.leading, .bottom])
     }
 }
 

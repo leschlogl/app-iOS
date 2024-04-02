@@ -17,23 +17,24 @@ public struct AboutView: View {
 									  stroke: theme.button.secondary.color ?? .blue)
 			})
 			.buttonStyle(PlainButtonStyle())
-			.listRowBackground(Color.clear)
 
 		}, header: {
-			VStack(alignment: .leading) {
-				Text("Sobre")
-					.font(.headline)
-				Text("versão \(Bundle.version ?? "")")
-					.font(.footnote)
-			}
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("SOBRE")
+                        .font(.headline)
+                    Text("VERSÃO \(Bundle.version ?? "")")
+                        .font(.footnote)
+                }
+                Spacer()
+            }
 			.foregroundColor(theme.text.terciary.color)
 			.accessibilityElement(children: .ignore)
 			.accessibilityLabel("A versão do app é \(Bundle.version ?? "desconhecida").")
 		}, footer: {
 			footerView
-				.listRowBackground(Color.clear)
+                .padding(.top)
 		})
-		.listRowSeparator(.hidden)
 	}
 }
 

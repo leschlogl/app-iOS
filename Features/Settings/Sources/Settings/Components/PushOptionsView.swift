@@ -11,15 +11,13 @@ public struct PushOptionsView: View {
 	public var body: some View {
 		Section(header: Text("Notificações")
 			.font(.headline)
-			.foregroundColor(theme.text.terciary.color)) {
+			.foregroundColor(theme.text.terciary.color)
+            .padding(.vertical)) {
 				SettingsTips.notifications.tipView(with: theme)
-					.listRowBackground(Color.clear)
 
 				optionsView
-					.listRowBackground(Color.clear)
+                    .padding(.leading)
 			}
-			.listRowSeparator(.hidden)
-			.buttonStyle(PlainButtonStyle())
 	}
 }
 

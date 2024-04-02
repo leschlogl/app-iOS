@@ -13,42 +13,49 @@ public struct SubscriptionView: View {
 
 	public var body: some View {
 		Section(content: {
-			if viewModel.isPatrao {
-				Button(action: { viewModel.isPatrao = false },
-					   label: {
-					Text("Logoff de patrão".uppercased())
-						.roundedFullSize(fill: theme.button.primary.color ?? .blue)
-				})
-				.padding(.vertical, 4)
-				.buttonStyle(PlainButtonStyle())
-				.listRowBackground(Color.clear)
+            Group {
+                if viewModel.isPatrao {
+                    Button(action: { viewModel.isPatrao = false },
+                           label: {
+                        Text("Logoff de patrão".uppercased())
+                            .roundedFullSize(fill: theme.button.primary.color ?? .blue)
+                    })
+                    .padding(.top)
+                    
+                } else if viewModel.subscriptionValid {
+                    manageSubscription
+                        .padding(.top)
 
-			} else if viewModel.subscriptionValid {
-				manageSubscription
+                } else {
+                    switch viewModel.status {
+                    case .done:
+                        sectionSubscription
+                        subscriptionOptions
 
-			} else {
-				switch viewModel.status {
-				case .done:
-					sectionSubscription
-					subscriptionOptions
-				case .purchasable(let products):
-					sectionSubscription(products.count)
-					subscriptionOptions
-				case .loading:
-					HStack {
-						Spacer()
-						ProgressView()
-						Spacer()
-					}
-						.listRowBackground(Color.clear)
-				case .error(let reason):
-					ErrorView(message: reason)
-						.listRowBackground(Color.clear)
-					subscriptionOptions
-				}
+                    case .purchasable(let products):
+                        sectionSubscription(products.count)
+                        subscriptionOptions
 
-				sectionPatrao
-			}
+                    case .loading:
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                            Spacer()
+                        }
+
+                    case .error(let reason):
+                        Group {
+                            ErrorView(message: reason)
+                            subscriptionOptions
+                        }
+                        .padding(.top)
+                    }
+                    
+                    sectionPatrao
+                }
+            }
+            .padding(.leading)
+            .padding(.trailing, 10)
 
 		}, footer: {
 			HStack {
@@ -66,9 +73,7 @@ public struct SubscriptionView: View {
 				})
 				Spacer()
 			}
-			.listRowBackground(Color.clear)
 		})
-		.listRowSeparator(.hidden)
 
 		.sheet(isPresented: $viewModel.isPresentingLoginPatrao) {
 			Webview(title: "Login para patrões",
@@ -115,11 +120,11 @@ public struct SubscriptionView: View {
 			}
 			.frame(minWidth: width)
 		}
-		.buttonStyle(PlainButtonStyle())
-		.listRowBackground(Color.clear)
 		.background(GeometryReader { proxy in
 			Path { _ in
-				width = proxy.size.width
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    width = proxy.size.width
+                }
 			}
 		})
 	}
@@ -144,12 +149,13 @@ public struct SubscriptionView: View {
 				}
 			}
 			.frame(minWidth: width)
+            .padding(.vertical)
 		}
-		.buttonStyle(PlainButtonStyle())
-		.listRowBackground(Color.clear)
 		.background(GeometryReader { proxy in
 			Path { _ in
-				width = proxy.size.width
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    width = proxy.size.width
+                }
 			}
 		})
 	}
@@ -167,8 +173,6 @@ public struct SubscriptionView: View {
 
 			manageSubscription
 		}
-		.buttonStyle(PlainButtonStyle())
-		.listRowBackground(Color.clear)
 	}
 
 	@ViewBuilder
@@ -179,8 +183,6 @@ public struct SubscriptionView: View {
 				.borderedFullSize(color: theme.button.primary.color ?? .blue,
 								  stroke: theme.button.primary.color ?? .blue)
 		})
-		.buttonStyle(PlainButtonStyle())
-		.listRowBackground(Color.clear)
 		.accessibilityLabel("Gerencia suas assinaturas do App.")
 	}
 
@@ -192,8 +194,6 @@ public struct SubscriptionView: View {
 				.roundedFullSize(fill: theme.button.primary.color ?? .blue)
 		})
 		.padding(.vertical, 4)
-		.buttonStyle(PlainButtonStyle())
-		.listRowBackground(Color.clear)
 		.accessibilityLabel("Fazer login como patrão para remover propagandas.")
 	}
 }
