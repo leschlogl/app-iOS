@@ -1,21 +1,22 @@
 import CommonLibrary
 import CoreLibrary
+import Settings
 import SwiftUI
 import WebKit
 
 class WebviewController: NSObject {
 	@Binding private var isPresenting: Bool
-	@Binding private var removeAds: Bool
+	private var removeAds: Bool
 
 	override init() {
 		_isPresenting = .constant(false)
-		_removeAds = .constant(false)
+		removeAds = false
 	}
 
 	init(isPresenting: Binding<Bool>,
-		 removeAds: Binding<Bool>) {
+		 removeAds: Bool) {
 		_isPresenting = isPresenting
-		_removeAds = removeAds
+        self.removeAds = removeAds
 	}
 
 	var userScripts: [WKUserScript] {
@@ -83,6 +84,20 @@ class WebviewController: NSObject {
 		return scripts
 	}
 
+    func cookies(using settings: SettingsViewModel) -> [HTTPCookie] {
+        var cookies = [HTTPCookie?]()
+
+        // Dark mode
+        cookies.append(Cookies.darkMode(settings.mode))
+
+        // Font size
+        cookies.append(Cookies.font)
+
+        // Purchased
+        cookies.append(Cookies.purchased(settings.removeAds))
+
+        return cookies.compactMap { $0 }
+    }
 }
 
 // MARK: - WebView Delegate -
@@ -166,9 +181,4 @@ extension WebviewController: WKScriptMessageHandler {
 			break
 		}
 	}
-}
-
-// MARK: - Private Methods -
-
-extension WebviewController {
 }

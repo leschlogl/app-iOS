@@ -1,4 +1,5 @@
 import CommonLibrary
+import Settings
 import SwiftUI
 import UIComponentsLibrary
 import UIComponentsLibrarySpecial
@@ -13,6 +14,7 @@ public enum NewsStyle {
 public struct NewsView: View {
 	@Environment(\.theme) private var theme: ThemeColor
 	@EnvironmentObject private var viewModel: NewsViewModel
+    @EnvironmentObject private var settingsViewModel: SettingsViewModel
 
 	private var width: CGFloat
 	private var filter: NewsViewModel.Category
@@ -35,14 +37,18 @@ public struct NewsView: View {
 
 		.fullScreenCover(isPresented: Binding(get: { !viewModel.newsToShow.url.isEmpty },
 											  set: { _, _ in })) {
-			Webview(title: viewModel.newsToShow.title,
+            let webView = WebviewController(isPresenting: Binding(get: { !viewModel.newsToShow.url.isEmpty },
+                                                                  set: { _, _ in }),
+                                            removeAds: settingsViewModel.removeAds)
+
+            Webview(title: viewModel.newsToShow.title,
 					url: viewModel.newsToShow.url,
 					isPresenting: Binding(get: { !viewModel.newsToShow.url.isEmpty },
 										  set: { _, _ in viewModel.newsToShow = NewsToShow(title: "", url: "", favorite: false) }),
-					navigationDelegate: WebviewController(isPresenting: .constant(true),
-														  removeAds: .constant(true)),
-					userScripts: WebviewController().userScripts,
-					scriptMessageHandlers: WebviewController().scriptMessageHandlers,
+					navigationDelegate: webView,
+					userScripts: webView.userScripts,
+                    cookies: webView.cookies(using: settingsViewModel),
+					scriptMessageHandlers: webView.scriptMessageHandlers,
 					userAgent: "/MacMagazine",
 					extraActions: extraActions)
 		}

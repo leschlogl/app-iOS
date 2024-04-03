@@ -43,6 +43,8 @@ public class SettingsViewModel: ObservableObject {
 
 	@Published public var cache: Cache?
 
+    @Published public var removeAds = false
+
 	private var updates: Task<Void, Never>? = nil
 
 	public let mainContext: NSManagedObjectContext
@@ -82,6 +84,8 @@ extension SettingsViewModel {
 		if let expirationDate = await storage.expirationDate {
 			subscriptionValid = expirationDate > Date()
 		}
+
+        removeAds = isPatrao || subscriptionValid
 
 		Analytics.log(settings: [
 			"icon": icon.rawValue as NSObject,

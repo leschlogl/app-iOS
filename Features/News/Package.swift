@@ -11,12 +11,14 @@ let package = Package(
     ],
 	dependencies: [
 		.package(name: "CommonLibrary", path: "../CommonLibrary"),
+        .package(name: "Settings", path: "../Settings"),
 		.package(url: "https://bitbucket.org/kasros/modules.git", branch: "master")
 	],
     targets: [
         .target(name: "News",
-				dependencies: ["CommonLibrary",
+				dependencies: ["CommonLibrary", "Settings",
 							   .product(name: "CoreLibrary", package: "modules"),
+                               .product(name: "YouTubeLibrary", package: "modules"),
 							   .product(name: "UIComponentsLibrarySpecial", package: "modules")],
 				resources: [.process("Resources")]),
         .testTarget(name: "NewsTests", dependencies: ["News"])
