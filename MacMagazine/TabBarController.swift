@@ -66,18 +66,9 @@ class TabBarController: NSObject, UITabBarControllerDelegate {
                   let navVC = splitVC.children[0] as? UINavigationController,
                   let viewController = navVC.children[0] as? PostsMasterViewController {
             if previousController == viewController || previousController == nil {
-                if navVC.children.count > 1,
-                   let navDetail = navVC.children[1] as? UINavigationController,
-                   let detail = navDetail.children[0] as? PostsDetailViewController,
-                   navVC.visibleViewController == detail {
-                    navVC.popViewController(animated: true)
-                } else {
-                    if viewController.tableView.numberOfSections > 0 &&
-                        viewController.tableView.numberOfRows(inSection: 0) > 0 {
-                        viewController.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
-                        viewController.tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: false)
-                    }
-                }
+                viewController.tableView.selectRow(at: IndexPath(row: 0, section: 0), animated: true, scrollPosition: .bottom)
+                viewController.tableView.deselectRow(at: IndexPath(row: 0, section: 0), animated: false)
+                navVC.popViewController(animated: true)
             }
             previousController = viewController
         } else if let navVC = viewController as? UINavigationController,
