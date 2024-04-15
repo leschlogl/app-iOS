@@ -129,26 +129,30 @@ extension SettingsViewModel {
 extension SettingsViewModel {
 	@MainActor
 	public func getPurchasableProducts() async throws {
-		do {
-			status = .loading
-			let endpoint = Endpoint.config()
-			MockURLProtocol(bundle: .module).mock(api: endpoint.restAPI)
-
-			let data = try await network.get(url: endpoint.url, headers: nil)
-			let object = try JSONDecoder().decode(PurchaseRequest.self, from: data)
-
-			status = .purchasable(products: object.subscriptions)
-
-			let products = try await InAppPurchaseManager.shared.getProducts(for: object.subscriptions.map { $0.product })
-			self.products = status.subscriptions.sorted(by: { $0.order < $1.order }).compactMap { value in
-				products.first(where: { $0.identifier == value.product })
-			}
-			status = .done
-
-		} catch {
-			status = .error(reason: error.localizedDescription)
-			throw NetworkError.error(reason: error.localizedDescription)
-		}
+        if InAppPurchaseManager.shared.canPurchase {
+            do {
+                status = .loading
+                let endpoint = Endpoint.config()
+                MockURLProtocol(bundle: .module).mock(api: endpoint.restAPI)
+                
+                let data = try await network.get(url: endpoint.url, headers: nil)
+                let object = try JSONDecoder().decode(PurchaseRequest.self, from: data)
+                
+                status = .purchasable(products: object.subscriptions)
+                
+                let products = try await InAppPurchaseManager.shared.getProducts(for: object.subscriptions.map { $0.product })
+                self.products = status.subscriptions.sorted(by: { $0.order < $1.order }).compactMap { value in
+                    products.first(where: { $0.identifier == value.product })
+                }
+                status = .done
+                
+            } catch {
+                status = .error(reason: error.localizedDescription)
+                throw NetworkError.error(reason: error.localizedDescription)
+            }
+        } else {
+            status = .error(reason: "Compras Dentro de Apps não permitida.")
+        }
 	}
 
 	func manageSubscriptions() {
