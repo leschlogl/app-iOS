@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -11,7 +11,7 @@ let package = Package(
     ],
 	dependencies: [
 		.package(url: "https://bitbucket.org/kasros/modules.git", branch: "master"),
-		.package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.23.0")
+		.package(url: "https://github.com/firebase/firebase-ios-sdk", from: "10.23.1")
 	],
     targets: [
 		.target(name: "CommonLibrary",

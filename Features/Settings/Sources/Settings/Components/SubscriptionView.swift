@@ -201,7 +201,7 @@ public struct SubscriptionView: View {
 #Preview {
 	List {
 		SubscriptionView()
+            .environmentObject(SettingsViewModel())
 			.environment(\.theme, ThemeColor())
-			.environmentObject(SettingsViewModel())
 	}
 }

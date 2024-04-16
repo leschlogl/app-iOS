@@ -41,5 +41,7 @@ extension PushOptionsView {
 #Preview {
 	List {
 		PushOptionsView()
+            .environment(\.theme, ThemeColor())
+            .environmentObject(SettingsViewModel())
 	}
 }

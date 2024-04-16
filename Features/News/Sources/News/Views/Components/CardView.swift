@@ -118,6 +118,38 @@ extension CardView {
 	}
 }
 
-#Preview {
-	CardView(object: CardData(style: .imageLast, title: "Title", creator: "Author", pubDate: "10/12/2023", artworkURL: "https://picsum.photos/800/600", aspectRatio: 1))
+#Preview("imageFirst") {
+    CardView(object: CardData(style: .imageFirst,
+                              title: "Title",
+                              creator: "Author",
+                              pubDate: "10/12/2023",
+                              artworkURL: "https://picsum.photos/800/600",
+                              aspectRatio: 1))
+}
+
+#Preview("imageLast") {
+	CardView(object: CardData(style: .imageLast,
+                              title: "Title",
+                              creator: "Author",
+                              pubDate: "10/12/2023",
+                              artworkURL: "https://picsum.photos/800/600",
+                              aspectRatio: 1))
+}
+
+#Preview("highlight") {
+    CardView(object: CardData(style: .highlight,
+                              title: "Title",
+                              creator: "Author",
+                              pubDate: "10/12/2023",
+                              artworkURL: "https://picsum.photos/800/600",
+                              aspectRatio: 1))
+}
+
+#Preview("simple") {
+    CardView(object: CardData(style: .simple,
+                              title: "Title",
+                              creator: "Author",
+                              pubDate: "10/12/2023",
+                              artworkURL: "https://picsum.photos/800/600",
+                              aspectRatio: 1))
 }

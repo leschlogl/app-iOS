@@ -62,5 +62,5 @@ struct HomeView: View {
 	HomeView()
 		.environmentObject(MainViewModel())
 		.environmentObject(VideosViewModel())
-        .environmentObject(NewsViewModel())
+        .environmentObject(NewsViewModel(inMemory: true))
 }

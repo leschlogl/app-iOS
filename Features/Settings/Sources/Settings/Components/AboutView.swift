@@ -51,5 +51,7 @@ extension AboutView {
 #Preview {
 	List {
 		AboutView()
+            .environmentObject(SettingsViewModel())
+            .environment(\.theme, ThemeColor())
 	}
 }

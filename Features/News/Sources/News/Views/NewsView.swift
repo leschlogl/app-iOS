@@ -121,3 +121,14 @@ extension NewsView {
 		.padding(.trailing)
 	}
 }
+
+#Preview {
+    let viewModel = NewsViewModel(inMemory: true)
+    return NewsView(filter: .news,
+             fit: .infinity,
+             style: .home)
+        .environment(\.managedObjectContext, viewModel.mainContext)
+        .environmentObject(viewModel)
+        .environmentObject(SettingsViewModel())
+        .environment(\.theme, ThemeColor())
+}

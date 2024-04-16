@@ -25,5 +25,5 @@ public struct CategoriesView: View {
 #Preview {
 	CategoriesView()
 		.environment(\.theme, ThemeColor())
-		.environmentObject(NewsViewModel())
+        .environmentObject(NewsViewModel(inMemory: true))
 }

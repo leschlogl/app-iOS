@@ -25,5 +25,5 @@ struct SectionsView: View {
 #Preview {
 	SectionsView()
         .environmentObject(MainViewModel())
-        .environmentObject(NewsViewModel())
+        .environmentObject(NewsViewModel(inMemory: true))
 }

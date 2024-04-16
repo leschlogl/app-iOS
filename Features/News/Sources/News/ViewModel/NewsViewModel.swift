@@ -161,11 +161,13 @@ public class NewsViewModel: ObservableObject {
 	let mock: [String: String]?
 
 	public init(customHost: CustomHost? = nil,
-				mock: [String: String]? = nil) {
+				mock: [String: String]? = nil,
+                inMemory: Bool = false) {
 		self.customHost = customHost
 		self.mock = mock
 		self.storage = Database(db: "NewsModel",
-								resource: Bundle.module.url(forResource: "NewsModel", withExtension: "momd"))
+								resource: Bundle.module.url(forResource: "NewsModel", withExtension: "momd"),
+                                inMemory: inMemory)
 		self.mainContext = self.storage.mainContext
 	}
 
