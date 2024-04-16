@@ -57,7 +57,12 @@ struct NewsFullView: View {
 }
 
 #Preview {
-    NewsFullView(filter: .news)
-        .environmentObject(NewsViewModel(inMemory: true))
+    let viewModel = NewsViewModel(inMemory: true)
+    return NewsFullView(filter: .news)
+        .environmentObject(viewModel)
         .environment(\.theme, ThemeColor())
+    
+        .task {
+            try? await viewModel.getNews()
+        }
 }
