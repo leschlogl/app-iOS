@@ -27,5 +27,5 @@ struct TitleView: View {
 }
 
 #Preview {
-	TitleView(title: "MacMagazine")
+    TitleView(title: "MacMagazine", color: .black)
 }

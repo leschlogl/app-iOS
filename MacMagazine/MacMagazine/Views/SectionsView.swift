@@ -1,4 +1,5 @@
 import CommonLibrary
+import News
 import SwiftUI
 
 struct SectionsView: View {
@@ -23,4 +24,6 @@ struct SectionsView: View {
 
 #Preview {
 	SectionsView()
+        .environmentObject(MainViewModel())
+        .environmentObject(NewsViewModel())
 }
