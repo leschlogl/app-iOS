@@ -58,4 +58,6 @@ struct NewsFullView: View {
 
 #Preview {
     NewsFullView(filter: .news)
+        .environmentObject(NewsViewModel(inMemory: true))
+        .environment(\.theme, ThemeColor())
 }

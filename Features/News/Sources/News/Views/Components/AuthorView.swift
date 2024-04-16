@@ -33,5 +33,5 @@ struct AuthorView: View {
 }
 
 #Preview {
-	AuthorView(author: "MacMagazine", date: "10.10.69")
+    AuthorView(author: "MacMagazine", date: "10.10.69", color: .blue)
 }
