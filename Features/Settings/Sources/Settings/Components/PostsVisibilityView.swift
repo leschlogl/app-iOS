@@ -42,7 +42,7 @@ public struct PostsVisibilityView: View {
                     })
                     Button(action: { viewModel.cache = .cleanImages },
                            label: {
-                        Text("Apagar somente as images".uppercased())
+                        Text("Apagar somente as imagens".uppercased())
                             .borderedFullSize(color: theme.button.primary.color ?? .blue,
                                               stroke: theme.button.primary.color ?? .blue)
                     })
