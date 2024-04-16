@@ -52,13 +52,6 @@
         "identifier" : "SettingsTests",
         "name" : "SettingsTests"
       }
-    },
-    {
-      "target" : {
-        "containerPath" : "container:..\/Features\/Videos",
-        "identifier" : "VideosTests",
-        "name" : "VideosTests"
-      }
     }
   ],
   "version" : 1
