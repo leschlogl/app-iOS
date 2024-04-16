@@ -67,5 +67,5 @@ extension ImageView {
 }
 
 #Preview {
-	ImageView(url: URL(string: "MacMagazine"))
+	ImageView(url: URL(string: "https://picsum.photos/800/600"))
 }

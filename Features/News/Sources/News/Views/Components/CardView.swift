@@ -119,5 +119,5 @@ extension CardView {
 }
 
 #Preview {
-	CardView(object: CardData(style: .imageLast, title: "Title", creator: "Author", pubDate: "", artworkURL: "", aspectRatio: 1))
+	CardView(object: CardData(style: .imageLast, title: "Title", creator: "Author", pubDate: "10/12/2023", artworkURL: "https://picsum.photos/800/600", aspectRatio: 1))
 }

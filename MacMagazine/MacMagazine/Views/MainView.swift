@@ -52,5 +52,6 @@ struct MainView: View {
 	MainView()
 		.environmentObject(MainViewModel())
 		.environmentObject(VideosViewModel())
+        .environmentObject(NewsViewModel())
 		.environment(\.theme, ThemeColor())
 }

@@ -55,3 +55,7 @@ struct NewsFullView: View {
 		}
 	}
 }
+
+#Preview {
+    NewsFullView(filter: .news)
+}
