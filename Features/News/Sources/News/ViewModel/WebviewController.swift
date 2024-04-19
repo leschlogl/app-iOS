@@ -150,7 +150,8 @@ extension WebviewController: WKNavigationDelegate {
 		default:
 			break
 		}
-		decisionHandler(actionPolicy)
+
+        decisionHandler(actionPolicy)
 	}
 }
 

@@ -74,17 +74,29 @@ extension MainViewModel {
 				switch value {
 				case .all:
 					self?.selectedTab = .news
-				case .home:
+
+                case .home:
 					self?.selectedTab = .home
-				case .filter(let category):
+				
+                case .filter(let category):
 					self?.filter = category
-					self?.selectedTab = .news
+                    self?.selectedTab = {
+                        switch category {
+                        case .highlights: .highlights
+                        case .youtube: .videos
+                        case .appletv: .appletv
+                        case .reviews: .reviews
+                        case .tutoriais: .tutoriais
+                        case .rumors: .rumors
+                        default: .news
+                        }
+                    }()
 				default: break
 				}
 			}
 			.store(in: &cancellables)
 
-		newsViewModel.$status
+        newsViewModel.$status
 			.receive(on: RunLoop.main)
 			.compactMap { $0 }
 			.sink { [weak self] value in

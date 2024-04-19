@@ -9,16 +9,21 @@ public struct CategoriesView: View {
 	public init() {}
 
 	public var body: some View {
-		ForEach(NewsViewModel.Category.allCases, id: \.self) { category in
-			Button(action: {},
-				   label: {
-                HStack {
-                    Text(category.title)
-                    Spacer()
-                }
-			})
-		}
-        .padding([.leading, .bottom])
+        VStack {
+            ForEach(NewsViewModel.Category.allCases, id: \.self) { category in
+                Button(action: {
+                    viewModel.options = .filter(category: category)
+                },
+                       label: {
+                    HStack {
+                        Text(category.title)
+                        Spacer()
+                    }
+                })
+                .padding([.leading, .bottom])
+            }
+        }
+        .padding(.top)
     }
 }
 

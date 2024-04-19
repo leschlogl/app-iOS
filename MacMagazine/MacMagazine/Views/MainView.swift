@@ -27,17 +27,39 @@ struct MainView: View {
 						 content: { HomeView() })
 				.tag(MainViewModel.Page.home)
 
-				NewsView(filter: viewModel.filter, fit: .infinity, style: .fullscreen)
+                NewsView(filter: .highlights, fit: .infinity, style: .fullscreen)
+                    .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
+                    .tag(MainViewModel.Page.highlights)
+
+                NewsView(filter: .news, fit: .infinity, style: .fullscreen)
 					.environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
 					.tag(MainViewModel.Page.news)
 
-				VideosFullView()
-					.tag(MainViewModel.Page.videos)
+                VideosFullView()
+                    .tag(MainViewModel.Page.videos)
+
+                NewsView(filter: .appletv, fit: .infinity, style: .fullscreen)
+                    .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
+                    .tag(MainViewModel.Page.appletv)
+
+                NewsView(filter: .reviews, fit: .infinity, style: .fullscreen)
+                    .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
+                    .tag(MainViewModel.Page.reviews)
+
+                NewsView(filter: .tutoriais, fit: .infinity, style: .fullscreen)
+                    .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
+                    .tag(MainViewModel.Page.tutoriais)
+
+                NewsView(filter: .rumors, fit: .infinity, style: .fullscreen)
+                    .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
+                    .tag(MainViewModel.Page.rumors)
 			}
 			.tabViewStyle(.page(indexDisplayMode: .never))
-			.onReceive(viewModel.$selectedTab) { value in
+
+            .onReceive(viewModel.$selectedTab) { value in
 				withAnimation {
 					selection = value
+                    isPresentingMenu = false
 				}
 			}
 
