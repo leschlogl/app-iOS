@@ -8,7 +8,6 @@ import YouTubeLibrary
 public struct VideosFullView: View {
 	@Environment(\.theme) private var theme: ThemeColor
 	@EnvironmentObject private var viewModel: VideosViewModel
-	@State private var title: String = "DICAS"
 	@State private var search: String?
 
 	public init() {}
@@ -20,17 +19,21 @@ public struct VideosFullView: View {
 
 			VStack {
 				HStack {
-					HeaderView(title: title, theme: theme)
-					Spacer()
-					Button(action: {
-						withAnimation {
-							viewModel.options = .home
-						}
-					}, label: {
-						Image(systemName: "xmark.circle")
-							.imageScale(.large)
-							.foregroundColor(theme.text.primary.color ?? Color(UIColor.label))
-					})
+                    Button(action: {
+                        withAnimation {
+                            viewModel.options = .home
+                        }
+                    }, label: {
+                        Image(systemName: "arrow.left.circle.fill")
+                            .tint(theme.tertiary.background.color)
+                            .imageScale(.large)
+                    })
+
+                    Text("Vídeos")
+                        .font(.largeTitle)
+                        .foregroundColor(theme.text.terciary.color)
+
+                    Spacer()
 				}
 
 				ErrorView(message: viewModel.status.reason, theme: theme)
@@ -44,21 +47,6 @@ public struct VideosFullView: View {
 			.padding([.leading, .trailing, .top])
 			.task {
 				try? await viewModel.youtube.getVideos()
-
-				switch viewModel.options {
-				case .search(let text):
-					search = text
-					title = "DICAS COM \(text)"
-				case .all:
-					search = nil
-					title = "TODAS AS DICAS"
-				case .favorite:
-					search = nil
-					title = "DICAS FAVORITAS"
-				default:
-					search = nil
-					title = "DICAS"
-				}
 			}
 		}
 		.environment(\.managedObjectContext, viewModel.context)

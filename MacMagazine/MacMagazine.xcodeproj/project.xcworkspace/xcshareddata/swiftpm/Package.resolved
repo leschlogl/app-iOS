@@ -1,5 +1,5 @@
 {
-  "originHash" : "5787c1805acc9a765c861cf0b42a857156fe9025e8cd8d3a644c6312753cd0a6",
+  "originHash" : "42d06adddb597e12648e0d2da18dc83657bdb05fe7cf068f6ecf0dffa8c6db22",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -115,7 +115,7 @@
       "location" : "https://bitbucket.org/kasros/modules.git",
       "state" : {
         "branch" : "master",
-        "revision" : "2ccb690e789fd912b579119c7f745330ca61b328"
+        "revision" : "72349623f7fc8a1cab2cfb483baef488ff95ec90"
       }
     },
     {

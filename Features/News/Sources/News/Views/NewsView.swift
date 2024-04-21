@@ -34,9 +34,9 @@ public struct NewsView: View {
             styleView
         }
         .padding(.horizontal)
-        
-        .fullScreenCover(isPresented: Binding(get: { !viewModel.newsToShow.url.isEmpty },
-                                              set: { _, _ in })) {
+
+        .navigationDestination(isPresented: Binding(get: { !viewModel.newsToShow.url.isEmpty },
+                                                    set: { _, _ in })) {
             let webView = WebviewController(isPresenting: Binding(get: { !viewModel.newsToShow.url.isEmpty },
                                                                   set: { _, _ in }),
                                             removeAds: settingsViewModel.removeAds)
@@ -50,7 +50,12 @@ public struct NewsView: View {
                     cookies: webView.cookies(using: settingsViewModel),
                     scriptMessageHandlers: webView.scriptMessageHandlers,
                     userAgent: "/MacMagazine",
-                    extraActions: extraActions)
+                    extraActions: extraActions,
+                    backButton: AnyView(Image(systemName: "arrow.left.circle.fill")
+                        .imageScale(.large)
+                        .tint(theme.tertiary.background.color)
+                    ))
+            .navigationBarHidden(true)
         }
     }
 }
@@ -116,20 +121,21 @@ extension NewsView {
         }, label: {
             Image(systemName: "square.and.arrow.up.on.square.fill")
                 .imageScale(.large)
-                .foregroundColor(.primary)
+                .tint(theme.tertiary.background.color)
         })
-        .padding(.trailing)
     }
 }
 
 #Preview("news") {
     let viewModel = NewsViewModel(inMemory: true)
-    return ScrollView {
-        NewsView(filter: .news, fit: .infinity, style: .home)
-        .environment(\.managedObjectContext, viewModel.mainContext)
-        .environmentObject(viewModel)
-        .environmentObject(SettingsViewModel())
-        .environment(\.theme, ThemeColor())
+    return NavigationStack {
+        ScrollView {
+            NewsView(filter: .news, fit: .infinity, style: .home)
+                .environment(\.managedObjectContext, viewModel.mainContext)
+                .environmentObject(viewModel)
+                .environmentObject(SettingsViewModel())
+                .environment(\.theme, ThemeColor())
+        }
     }
     .task {
         try? await viewModel.getNews()
