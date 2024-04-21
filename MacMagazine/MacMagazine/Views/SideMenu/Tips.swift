@@ -2,9 +2,28 @@ import Foundation
 import TipKit
 
 @available(iOS 17, *)
+struct FavouritesTip: Tip {
+    @Parameter
+    static var isActive: Bool = true
+
+    var title: Text { Text("Favoritos") }
+    var message: Text? { Text("Veja seus posts favoritos em um único lugar.") }
+
+    var rules: [Rule] = [
+        #Rule(Self.$isActive) { $0 == true }
+    ]
+
+    var actions: [Action] {
+        SideMenuTips.favourites.add { tip in
+            (tip as? SideMenuTips)?.show()
+        }
+    }
+}
+
+@available(iOS 17, *)
 struct CategoriesTip: Tip {
 	@Parameter
-	static var isActive: Bool = true
+	static var isActive: Bool = false
 
 	var title: Text { Text("Nossas Notícias") }
 	var message: Text? { Text("Escolha uma categoria para ver nosso conteúdo especializado.") }

@@ -24,12 +24,15 @@ struct MainView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 TabView(selection: $selection) {
-                    
                     MenuView(isShowing: $isPresentingMenu,
                              menu: { AnyView(SectionsView()) },
                              content: { HomeView() })
                     .tag(MainViewModel.Page.home)
                     
+                    FavouritesView()
+                        .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
+                        .tag(MainViewModel.Page.favourites)
+
                     NewsView(filter: .highlights, fit: .infinity, style: .fullscreen)
                         .environment(\.managedObjectContext, viewModel.newsViewModel.mainContext)
                         .tag(MainViewModel.Page.highlights)
@@ -73,9 +76,14 @@ struct MainView: View {
 }
 
 #Preview {
-	MainView()
-		.environmentObject(MainViewModel())
-		.environmentObject(VideosViewModel())
+    let viewModel = MainViewModel()
+    return MainView()
+        .environmentObject(viewModel)
+        .environmentObject(VideosViewModel())
         .environmentObject(NewsViewModel(inMemory: true))
-		.environment(\.theme, ThemeColor())
+        .environmentObject(viewModel.settingsViewModel)
+        .environment(\.theme, ThemeColor())
+        .task {
+            viewModel.isLoading = false
+        }
 }

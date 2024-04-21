@@ -20,6 +20,7 @@ class MainViewModel: ObservableObject {
 		case reviews
 		case tutoriais
 		case rumors
+        case favourites
 	}
 
 	struct Section: Identifiable {
@@ -91,7 +92,11 @@ extension MainViewModel {
                         default: .news
                         }
                     }()
-				default: break
+
+                case .favourites:
+                    self?.selectedTab = .favourites
+
+                default: break
 				}
 			}
 			.store(in: &cancellables)

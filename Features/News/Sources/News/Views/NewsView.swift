@@ -36,7 +36,9 @@ public struct NewsView: View {
         .padding(.horizontal)
 
         .navigationDestination(isPresented: Binding(get: { !viewModel.newsToShow.url.isEmpty },
-                                                    set: { _, _ in })) {
+                                                    set: { _, _ in
+            try? viewModel.mainContext.save()
+        })) {
             let webView = WebviewController(isPresenting: Binding(get: { !viewModel.newsToShow.url.isEmpty },
                                                                   set: { _, _ in }),
                                             removeAds: settingsViewModel.removeAds)
@@ -44,7 +46,7 @@ public struct NewsView: View {
             Webview(title: viewModel.newsToShow.title,
                     url: viewModel.newsToShow.url,
                     isPresenting: Binding(get: { !viewModel.newsToShow.url.isEmpty },
-                                          set: { _, _ in viewModel.newsToShow = NewsToShow(title: "", url: "", favorite: false) }),
+                                          set: { _, _ in viewModel.newsToShow = NewsToShow(title: "", url: "", favorite: false, original: nil) }),
                     navigationDelegate: webView,
                     userScripts: webView.userScripts,
                     cookies: webView.cookies(using: settingsViewModel),
@@ -101,9 +103,7 @@ extension NewsView {
         Button(action: {
             let favorite = UIActivityExtensions(title: "Favorito",
                                                 image: UIImage(systemName: viewModel.newsToShow.favorite ? "star.fill" : "star")) { _ in
-                //				Favorite().updatePostStatus(using: link) { [weak self] isFavorite in
-                //					self?.post?.favorito = isFavorite
-                //				}
+                viewModel.newsToShow.favorite.toggle()
             }
             
             let customCopy = UIActivityExtensions(title: "Copiar Link", image: UIImage(systemName: "link")) { items in
@@ -114,10 +114,11 @@ extension NewsView {
                     UIPasteboard.general.url = url
                 }
             }
-            
-            let items: [Any] = [viewModel.newsToShow.title, viewModel.newsToShow.url]
-            
-            Share().present(at: self, using: items, activities: [favorite, customCopy])
+
+            Share().present(at: self,
+                            using: [viewModel.newsToShow.title, viewModel.newsToShow.url],
+                            activities: [favorite, customCopy])
+
         }, label: {
             Image(systemName: "square.and.arrow.up.on.square.fill")
                 .imageScale(.large)

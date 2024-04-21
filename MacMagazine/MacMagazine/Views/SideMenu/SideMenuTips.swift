@@ -3,13 +3,17 @@ import SwiftUI
 import TipKit
 
 enum SideMenuTips: TipType {
+    case favourites
 	case categories
 	case subscriptions
 	case posts
 	case settings
 	case about
 
-	@available(iOS 17, *)
+    @available(iOS 17, *)
+    private static var favouritesTip: FavouritesTip { FavouritesTip() }
+
+    @available(iOS 17, *)
 	private static var categoriesTip: CategoriesTip { CategoriesTip() }
 
 	@available(iOS 17, *)
@@ -31,7 +35,10 @@ extension SideMenuTips {
 		if #available(iOS 17, *) {
 			Group {
 				switch self {
-				case .categories:
+                case .favourites:
+                    TipView(Self.favouritesTip, arrowEdge: .bottom)
+
+                case .categories:
 					TipView(Self.categoriesTip, arrowEdge: .bottom)
 
 				case .subscriptions:
@@ -54,6 +61,7 @@ extension SideMenuTips {
 	func invalidate() {
 		if #available(iOS 17, *) {
 			switch self {
+            case .favourites: Self.favouritesTip.invalidate(reason: .actionPerformed)
 			case .categories: Self.categoriesTip.invalidate(reason: .actionPerformed)
 			case .subscriptions: Self.subscriptionsTip.invalidate(reason: .actionPerformed)
 			case .posts: Self.postsTip.invalidate(reason: .actionPerformed)
@@ -66,6 +74,7 @@ extension SideMenuTips {
 	func show() {
 		if #available(iOS 17, *) {
 			switch self {
+            case .favourites: FavouritesTip.isActive = true
 			case .categories: CategoriesTip.isActive = true
 			case .subscriptions: SubscriptionsTip.isActive = true
 			case .posts: PostsTip.isActive = true

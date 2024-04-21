@@ -26,7 +26,9 @@ extension Database {
 		// Provide one dictionary at a time when the closure is called.
 		let batchInsertRequest = NSBatchInsertRequest(entity: News.entity(), dictionaryHandler: { dictionary in
 			guard index < total else { return true }
-			dictionary.addEntries(from: posts[index].asDictionary)
+            var object = posts[index].asDictionary
+            object.removeValue(forKey: "favorite")
+			dictionary.addEntries(from: object)
 			index += 1
 			return false
 		})

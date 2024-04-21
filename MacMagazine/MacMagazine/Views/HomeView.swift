@@ -54,9 +54,11 @@ struct HomeView: View {
 }
 
 #Preview {
+    let viewModel = MainViewModel()
     return HomeView()
-        .environmentObject(MainViewModel())
+        .environmentObject(viewModel)
         .environmentObject(VideosViewModel())
         .environmentObject(NewsViewModel(inMemory: true))
+        .environmentObject(viewModel.settingsViewModel)
         .environment(\.theme, ThemeColor())
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B0BAE8D2BD5995B008E7552 /* FavouritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B0BAE8C2BD5995B008E7552 /* FavouritesView.swift */; };
 		9B3D99692B2D0C04008C8156 /* Configuration.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 9B3D99682B2D0C04008C8156 /* Configuration.storekit */; };
 		9B3D996C2B2DF984008C8156 /* OneSignalFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 9B3D996B2B2DF984008C8156 /* OneSignalFramework */; };
 		9B477EC72B1E709A008987E9 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 9B477EC62B1E709A008987E9 /* FirebaseCrashlytics */; };
@@ -52,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9B0BAE8C2BD5995B008E7552 /* FavouritesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouritesView.swift; sourceTree = "<group>"; };
 		9B3D99682B2D0C04008C8156 /* Configuration.storekit */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		9B5494992B1A48DF00BD51FF /* sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sound.wav; sourceTree = "<group>"; };
 		9B54949D2B1A561A00BD51FF /* CommonLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CommonLibrary; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		9BC79BCD2B2CE46500A41796 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				9B0BAE8C2BD5995B008E7552 /* FavouritesView.swift */,
 				9BB53D752B2F5F81008E6B67 /* HomeView.swift */,
 				9BD78AB52B1A14C70002703B /* MainView.swift */,
 				9B8FD3242B3625FC001CE106 /* SectionsView.swift */,
@@ -389,6 +392,7 @@
 				9B8FD3252B3625FC001CE106 /* SectionsView.swift in Sources */,
 				9BD78AB42B1A14C70002703B /* MacMagazineApp.swift in Sources */,
 				9BC79BCA2B2CE44500A41796 /* MainViewModel.swift in Sources */,
+				9B0BAE8D2BD5995B008E7552 /* FavouritesView.swift in Sources */,
 				9BB53D762B2F5F81008E6B67 /* HomeView.swift in Sources */,
 				9BB53D7D2B2F93F8008E6B67 /* Tips.swift in Sources */,
 				9BB53D7B2B2F93A3008E6B67 /* SideMenuTips.swift in Sources */,

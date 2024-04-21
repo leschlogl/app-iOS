@@ -27,6 +27,9 @@ struct SideMenuView: View {
     @Binding var isPresentingMenu: Bool
     
     let items: [Menu] = [
+        Menu(view: AnyView(FavouriteView()),
+             tip: SideMenuTips.favourites,
+             children: nil),
         Menu(view: AnyView(Text("Categorias")),
              tip: SideMenuTips.categories,
              children: [Menu(view: AnyView(CategoriesView()))]),
@@ -40,7 +43,7 @@ struct SideMenuView: View {
              tip: SideMenuTips.settings,
              children: [
                 Menu(view: AnyView(PushOptionsView())),
-                Menu(view: AnyView(AppearanceView(theme: ThemeColor())))
+                Menu(view: AnyView(AppearanceView()))
              ])
     ]
     
@@ -130,4 +133,21 @@ extension SideMenuView {
                  isPresentingMenu: .constant(false))
     .environmentObject(SettingsViewModel())
     .environment(\.theme, ThemeColor())
+}
+
+struct FavouriteView: View {
+    @Environment(\.theme) private var theme: ThemeColor
+    @EnvironmentObject private var viewModel: NewsViewModel
+
+    var body: some View {
+        Button(action: {
+            viewModel.options = .favourites
+        }, label: {
+            HStack {
+                Text("Favoritos")
+                Spacer()
+            }
+            .tint(theme.main.tint.color)
+        })
+    }
 }

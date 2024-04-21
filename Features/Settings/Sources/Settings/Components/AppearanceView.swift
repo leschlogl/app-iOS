@@ -2,15 +2,10 @@ import CommonLibrary
 import SwiftUI
 
 public struct AppearanceView: View {
-	private let theme: ThemeColor
+    @Environment(\.theme) private var theme: ThemeColor
 	@EnvironmentObject private var viewModel: SettingsViewModel
 
-	public init(theme: ThemeColor) {
-		self.theme = theme
-
-		UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(theme.text.primary.color ?? .primary)], for: .normal)
-		UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(theme.text.secondary.color ?? .secondary)], for: .selected)
-		UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(theme.main.tint.color ?? .blue)
+	public init() {
 	}
 
 	public var body: some View {
@@ -30,6 +25,11 @@ public struct AppearanceView: View {
                 .padding(.leading)
                 .padding(.trailing, 10)
 			}
+            .task {
+                UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(theme.text.primary.color ?? .primary)], for: .normal)
+                UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor(theme.text.secondary.color ?? .secondary)], for: .selected)
+                UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(theme.main.tint.color ?? .blue)
+            }
     }
 }
 
@@ -81,7 +81,8 @@ extension AppearanceView {
 
 #Preview {
 	List {
-		AppearanceView(theme: ThemeColor())
+		AppearanceView()
+            .environment(\.theme, ThemeColor())
 			.environmentObject(SettingsViewModel())
 	}
 }

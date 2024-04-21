@@ -41,7 +41,10 @@ extension CarrouselView {
 	@ViewBuilder
 	private func show(content object: News) -> some View {
 		Button(action: {
-			viewModel.newsToShow = NewsToShow(title: object.title ?? "", url: object.shortURL ?? "", favorite: object.favorite)
+			viewModel.newsToShow = NewsToShow(title: object.title ?? "",
+                                              url: object.shortURL ?? "",
+                                              favorite: object.favorite,
+                                              original: object)
 		}, label: {
 			CardView(object: CardData(style: filter.style,
 									  title: object.title,
@@ -53,4 +56,18 @@ extension CarrouselView {
 									  aspectRatio: filter.aspectRatio))
 		})
 	}
+}
+
+#Preview {
+    let viewModel = NewsViewModel(inMemory: true)
+    return ScrollView {
+        CarrouselView(filter: .highlights, fit: 420)
+            .environment(\.managedObjectContext, viewModel.mainContext)
+            .environmentObject(viewModel)
+            .environment(\.theme, ThemeColor())
+        
+    }.padding(.horizontal)
+    .task {
+        try? await viewModel.getNews()
+    }
 }

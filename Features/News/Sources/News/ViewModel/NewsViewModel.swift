@@ -7,19 +7,24 @@ import Foundation
 public struct NewsToShow {
 	let title: String
 	let url: String
-	let favorite: Bool
+    var favorite: Bool {
+        didSet {
+            original?.favorite = favorite
+        }
+    }
+    var original: News?
 }
 
 public class NewsViewModel: ObservableObject {
 	@Published public var options: Options = .home
-	@Published public var newsToShow: NewsToShow = NewsToShow(title: "", url: "", favorite: false)
+    @Published public var newsToShow: NewsToShow = NewsToShow(title: "", url: "", favorite: false, original: nil)
 	@Published public var category: Category = .news
 	@Published public var status: Status = .loading
 
 	public enum Options: Equatable {
 		case all
 		case home
-		case favorite
+		case favourites
 		case search(text: String)
 		case filter(category: Category)
 	}
