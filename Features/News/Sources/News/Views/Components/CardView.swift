@@ -118,38 +118,43 @@ extension CardView {
 	}
 }
 
-#Preview("imageFirst") {
-    CardView(object: CardData(style: .imageFirst,
-                              title: "Title",
-                              creator: "Author",
-                              pubDate: "10/12/2023",
-                              artworkURL: "https://picsum.photos/800/600",
-                              aspectRatio: 1))
-}
+#Preview {
+    ScrollView {
+        CardView(object: CardData(style: .imageFirst,
+                                  title: "Title",
+                                  creator: "Author",
+                                  pubDate: "10/12/2023",
+                                  artworkURL: "https://picsum.photos/800/600",
+                                  aspectRatio: 1))
+        .frame(height: 300)
 
-#Preview("imageLast") {
-	CardView(object: CardData(style: .imageLast,
-                              title: "Title",
-                              creator: "Author",
-                              pubDate: "10/12/2023",
-                              artworkURL: "https://picsum.photos/800/600",
-                              aspectRatio: 1))
-}
+        Divider()
 
-#Preview("highlight") {
-    CardView(object: CardData(style: .highlight,
-                              title: "Title",
-                              creator: "Author",
-                              pubDate: "10/12/2023",
-                              artworkURL: "https://picsum.photos/800/600",
-                              aspectRatio: 1))
-}
+        CardView(object: CardData(style: .imageLast,
+                                  title: "Title",
+                                  creator: "Author",
+                                  pubDate: "10/12/2023",
+                                  artworkURL: "https://picsum.photos/800/600",
+                                  aspectRatio: 1))
+        .frame(height: 200)
 
-#Preview("simple") {
-    CardView(object: CardData(style: .simple,
-                              title: "Title",
-                              creator: "Author",
-                              pubDate: "10/12/2023",
-                              artworkURL: "https://picsum.photos/800/600",
-                              aspectRatio: 1))
+        Divider()
+
+        CardView(object: CardData(style: .highlight,
+                                  title: "Title",
+                                  creator: "Author",
+                                  pubDate: "10/12/2023",
+                                  artworkURL: "https://picsum.photos/800/600",
+                                  aspectRatio: 1))
+        .padding(.horizontal)
+
+        Divider()
+
+        CardView(object: CardData(style: .simple,
+                                  title: "Title",
+                                  creator: "Author",
+                                  pubDate: "10/12/2023",
+                                  artworkURL: "https://picsum.photos/800/600",
+                                  aspectRatio: 1))
+    }
 }

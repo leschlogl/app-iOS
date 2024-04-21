@@ -195,6 +195,33 @@ public class NewsViewModel: ObservableObject {
 }
 
 extension NewsViewModel {
+    func filter(source: String?) -> NewsViewModel.Category {
+        if source?.contains(NewsViewModel.Category.rumors.rawValue) ?? false {
+            return .rumors
+        }
+        if source?.contains(NewsViewModel.Category.tutoriais.rawValue) ?? false {
+            return .tutoriais
+        }
+        if source?.contains(NewsViewModel.Category.reviews.rawValue) ?? false {
+            return .reviews
+        }
+        if source?.contains(NewsViewModel.Category.appletv.rawValue) ?? false {
+            return .appletv
+        }
+        if source?.contains(NewsViewModel.Category.youtube.rawValue) ?? false {
+            return .youtube
+        }
+        if source?.contains(NewsViewModel.Category.podcast.rawValue) ?? false {
+            return .podcast
+        }
+        if source?.contains(NewsViewModel.Category.highlights.rawValue) ?? false {
+            return .highlights
+        }
+        return .news
+    }
+}
+
+extension NewsViewModel {
 	private func loadNews(query: Category) async throws -> [XMLPost] {
 		do {
 			let endpoint = Endpoint.posts(customHost: customHost, paged: 0, query: query.query)
