@@ -39,6 +39,17 @@ struct MacMagazineWidgetExtension: Widget {
         .configurationDisplayName("MacMagazine")
         .description("Confira nossos últimos posts!")
         .supportedFamilies(supportedFamilies)
+        .disableMargins()
+    }
+}
+
+private extension WidgetConfiguration {
+    func disableMargins() -> some WidgetConfiguration {
+        if #available(iOSApplicationExtension 15.0, *) {
+            return contentMarginsDisabled()
+        } else {
+            return self
+        }
     }
 }
 
