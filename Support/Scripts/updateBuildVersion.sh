@@ -53,7 +53,7 @@ if [ -z "${ORIGINAL_APP_VERSION}" ] ; then
 fi
 echo "  Original App Version String: $ORIGINAL_APP_VERSION"
 
-bundle_app_version=`echo $ORIGINAL_APP_VERSION | awk -F "." '{print '$app_version' }'`
+bundle_app_version=`echo $ORIGINAL_APP_VERSION | awk -F "." '{print "'$app_version'" }'`
 
 echo -e "  (\x1B[32m✓\x1B[0m) Provided App Version: ${bundle_app_version}"
 
