@@ -4,11 +4,12 @@
 set -e
 
 # ---- READ PARAMS ----
-while getopts ":p:i:b:" opt; do
+while getopts ":p:i:b:v:" opt; do
     case $opt in
         p) project_name="$OPTARG";;
         i) info_plist_file="$OPTARG";;
         b) build_version="$OPTARG";;
+        v) app_version="$OPTARG";;
         \?) echo "Invalid option -$OPTARG" >&2;;
     esac
 done
@@ -40,6 +41,27 @@ fi
 echo ""
 echo "(i) Replacing version for ${info_plist_file} ..."
 
+# ---- ORIGINAL APP VERSION - 1.0.0 ----
+ORIGINAL_APP_VERSION=`sed -n '/MARKETING_VERSION/{s/MARKETING_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ./${project_name}.xcodeproj/project.pbxproj`
+if [ -z "${ORIGINAL_APP_VERSION}" ] ; then
+	ORIGINAL_APP_VERSION=$(/usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" "${info_plist_file}")
+fi
+if [ -z "${ORIGINAL_APP_VERSION}" ] ; then
+	echo -e "\x1B[31m[✗] No App Version String (app_version) specified!\x1B[0m"
+	echo -e "\x1B[31m[✗] Exiting...\x1B[0m"
+	exit 1
+fi
+echo "  Original App Version String: $ORIGINAL_APP_VERSION"
+
+bundle_app_version=`echo $ORIGINAL_APP_VERSION | awk -F "." '{print '$app_version' }'`
+
+echo -e "  (\x1B[32m✓\x1B[0m) Provided App Version: ${bundle_app_version}"
+
+# ---- UPDATE PLIST ----
+
+echo ""
+/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${bundle_app_version}" "${info_plist_file}"
+
 # ---- ORIGINAL BUILD VERSION - 1 ----
 ORIGINAL_BUNDLE_VERSION=`sed -n '/CURRENT_PROJECT_VERSION/{s/CURRENT_PROJECT_VERSION = //;s/;//;s/^[[:space:]]*//;p;q;}' ./${project_name}.xcodeproj/project.pbxproj`
 if [ -z "${ORIGINAL_BUNDLE_VERSION}" ] ; then
@@ -52,7 +74,7 @@ if [ -z "${ORIGINAL_BUNDLE_VERSION}" ] ; then
 fi
 echo "  Original Bundle Version String: $ORIGINAL_BUNDLE_VERSION"
 
-bundle_version=`echo $ORIGINAL_BUNDLE_VERSION | awk -F "." '{print $1 "." $2 "." $3 ".'$build_version'" }'`
+bundle_version=`echo $ORIGINAL_BUNDLE_VERSION | awk -F "." '{print "'$app_version'.'$build_version'" }'`
 
 echo -e "  (\x1B[32m✓\x1B[0m) Provided Bundle Version: ${bundle_version}"
 
