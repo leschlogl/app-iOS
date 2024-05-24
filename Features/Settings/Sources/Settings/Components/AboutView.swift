@@ -12,7 +12,7 @@ public struct AboutView: View {
 		Section(content: {
 			Button(action: { viewModel.composeMessage() },
 				   label: {
-				Text("Relater problema/bug no app".uppercased())
+				Text("Relatar problema/bug no app".uppercased())
 					.borderedFullSize(color: theme.text.primary.color ?? .primary,
 									  stroke: theme.button.secondary.color ?? .blue)
 			})
